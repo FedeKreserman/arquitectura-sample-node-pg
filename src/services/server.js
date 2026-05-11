@@ -16,6 +16,8 @@ app.use(express.json()); // Middleware para parsear y comprender JSON
 // Endpoints (todos los Routers)
 app.use("/api/alumnos", AlumnosController);
 app.use("/api/cursos" , CursosController);
+app.use("/api/materias", MateriasContorller);
+app.use("/api/calificaciones", CalificacionesController)
 
 //
 // Inicio el Server y lo pongo a escuchar.
