@@ -1,6 +1,4 @@
-import AlumnosRepository from '../repositories/alumnos-repository.js';
-//import AlumnosRepository from '../repositories/alumnos-repository-new.js';
-import CursosService from './cursos-service.js';
+import CalificacionesRepository from '../repositories/Calificaciones-repository.js';
 
 function calcularEdad(fechaNacimiento) {
     if (!fechaNacimiento) return null;
@@ -36,22 +34,22 @@ export default class AlumnosService {
     getByIdAsync = async (id) => {
         console.log(`AlumnosService.getByIdAsync(${id})`);
         const returnEntity = await this.AlumnosRepository.getByIdAsync(id);
-        // Regla de negocio que agrega la edad.!!!
+       
         return agregarEdad(returnEntity);
     }
 
     createAsync = async (entity) => {
         console.log(`AlumnosService.createAsync(${JSON.stringify(entity)})`);
-        // Regla de negocio!!!
+      
         await this.validarCursoExiste(entity.id_curso);
-        // Si llegue aca es que no hubo un error.
+       
         const rowsAffected = await this.AlumnosRepository.createAsync(entity);
         return rowsAffected;
     }
 
     updateAsync = async (entity) => {
         console.log(`AlumnosService.updateAsync(${JSON.stringify(entity)})`);
-        // Regla de Negocio!
+        
         if (entity.id_curso) {
             await this.validarCursoExiste(entity.id_curso);
         }
@@ -67,7 +65,7 @@ export default class AlumnosService {
     }
 
     validarCursoExiste = async (idCurso) => {
-        if (!idCurso) return; // Early return
+        if (!idCurso) return; 
 
         const curso = await this.CursosService.getByIdAsync(idCurso);
         if (curso == null) {

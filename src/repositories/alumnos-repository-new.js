@@ -8,15 +8,15 @@ export default class AlumnosRepository {
 
     getAllAsync = async () => {
         console.log(`AlumnosRepository-new.getAllAsync()`);
-        const sql = `SELECT * FROM alumnos`;
-        return await this.db.queryAll(sql);
-    }
+            const sql = `SELECT * FROM alumnos`;
+            return await this.db.queryAll(sql);
+        }
 
-    getByIdAsync = async (id) => {
-        console.log(`AlumnosRepository-new.getByIdAsync(${id})`);
-        const sql = `SELECT * FROM alumnos WHERE id=$1`;
-        return await this.db.queryOne(sql, [id]);
-    }
+        getByIdAsync = async (id) => {
+            console.log(`AlumnosRepository-new.getByIdAsync(${id})`);
+            const sql = `SELECT * FROM alumnos WHERE id=$1`;
+            return await this.db.queryOne(sql, [id]);
+        }
 
     createAsync = async (entity) => {
         console.log(`AlumnosRepository-new.createAsync(${JSON.stringify(entity)})`);
