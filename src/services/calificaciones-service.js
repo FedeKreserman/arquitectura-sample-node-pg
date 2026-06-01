@@ -49,7 +49,7 @@ export default class CalificacionesService {
 
     createAsync = async (entity) => {
         console.log(`CalificacionesService.createAsync(${JSON.stringify(entity)})`);
-
+console.log("fEDE1")
         // Validación: nota entre 0 y 10
         if (entity.nota < 0 || entity.nota > 10) {
 
@@ -70,7 +70,7 @@ export default class CalificacionesService {
                 entity.id_alumno,
                 entity.id_materia
             );
-
+console.log("fEDE2")
         if (calificacionExistente != null) {
 
             const error = new Error('Ya existe una calificación para ese alumno y materia');

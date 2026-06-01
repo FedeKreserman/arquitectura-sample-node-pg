@@ -37,6 +37,7 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('', async (req, res) => {
+    console.log("fEDE")
     try {
         let entity = req.body;
         const newId = await currentService.createAsync(entity);
