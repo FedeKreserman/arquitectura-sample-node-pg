@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import CursosService from './../services/cursos-service.js'
+import cursos from './../entities/curso.js'
 
 const router = Router();
 const currentService = new CursosService();

@@ -1,4 +1,5 @@
-import CalificacionesRepository from '../repositories/Calificaciones-repository.js';
+import AlumnosRepository from '../repositories/alumnos-repository.js';
+import CursosService from './cursos-service.js';
 
 function calcularEdad(fechaNacimiento) {
     if (!fechaNacimiento) return null;

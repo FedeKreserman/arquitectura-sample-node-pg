@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import calificacionesService from './../services/calificaciones-service.js'
-import calificaciones from './../entities/calificaciones.js'
+import CalificacionesService from './../services/calificaciones-service.js'
+
 
 const router = Router();
 const currentService = new CalificacionesService();
@@ -12,7 +12,7 @@ router.get('', async (req, res) => {
         const returnArray = await currentService.getAllAsync();
         if (returnArray != null){
             res.status(StatusCodes.OK).json(returnArray);
-        } else {
+        } else {    
             res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(`Error interno.`);
         }
     } catch (error) {
