@@ -1,9 +1,43 @@
 import { Router } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import MateriasService from './../services/materias-service.js';
+import Materia from './../entities/materia.js';
 
 const router = Router();
 const currentService = new MateriasService();
+
+// Probar con:
+// GET http://localhost:3000/api/materias/test-insert
+router.get('/test-insert', async (req, res) => {
+    console.log('/test-insert');
+
+    try {
+        const nuevaMateria = new Materia(
+            0,              // id
+            'Programacion', // nombre
+            1               // id_curso
+        );
+
+        console.log('Objeto Materia creado desde código:', nuevaMateria);
+
+        const newId = await currentService.createAsync(nuevaMateria);
+
+        if (newId > 0) {
+            res.status(StatusCodes.CREATED).json({
+                message: `Se creó la materia desde código con id: ${newId}`,
+                materia: nuevaMateria,
+                newId: newId
+            });
+        } else {
+            res.status(StatusCodes.BAD_REQUEST).json({
+                message: 'No se pudo crear la materia.'
+            });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(StatusCodes.BAD_REQUEST).send(`Error: ${error.message}`);
+    }
+});
 
 router.get('', async (req, res) => {
     try {

@@ -39,7 +39,6 @@ export default class CalificacionesService {
     getByAlumnoAsync = async (idAlumno) => {
         console.log(`CalificacionesService.getByAlumnoAsync(${idAlumno})`);
 
-        // Validación: el alumno debe existir
         await this.validarAlumnoExiste(idAlumno);
 
         const returnArray = await this.CalificacionesRepository.getByAlumnoAsync(idAlumno);
@@ -49,59 +48,47 @@ export default class CalificacionesService {
 
     createAsync = async (entity) => {
         console.log(`CalificacionesService.createAsync(${JSON.stringify(entity)})`);
-console.log("fEDE1")
-        // Validación: nota entre 0 y 10
-        if (entity.nota < 0 || entity.nota > 10) {
 
+        if (entity.nota < 0 || entity.nota > 10) {
             const error = new Error('La nota debe estar entre 0 y 10');
             error.status = 400;
             throw error;
         }
 
-        // Validación: el alumno debe existir
         await this.validarAlumnoExiste(entity.id_alumno);
-
-        // Validación: la materia debe existir
         await this.validarMateriaExiste(entity.id_materia);
 
-        // Validación: no debe existir calificación previa
         const calificacionExistente =
             await this.CalificacionesRepository.getByAlumnoMateriaAsync(
                 entity.id_alumno,
                 entity.id_materia
             );
-console.log("fEDE2")
-        if (calificacionExistente != null) {
 
+        if (calificacionExistente != null) {
             const error = new Error('Ya existe una calificación para ese alumno y materia');
             error.status = 409;
             throw error;
         }
 
-        const rowsAffected = await this.CalificacionesRepository.createAsync(entity);
+        const newId = await this.CalificacionesRepository.createAsync(entity);
 
-        return rowsAffected;
+        return newId;
     }
 
     updateAsync = async (entity) => {
         console.log(`CalificacionesService.updateAsync(${JSON.stringify(entity)})`);
 
-        // Validación: la calificación debe existir
         const calificacionExistente =
             await this.CalificacionesRepository.getByIdAsync(entity.id);
 
         if (calificacionExistente == null) {
-
             const error = new Error('La calificación no existe');
             error.status = 404;
             throw error;
         }
 
-        // Validación: si viene nota, debe estar entre 0 y 10
         if (entity.nota != undefined) {
-
             if (entity.nota < 0 || entity.nota > 10) {
-
                 const error = new Error('La nota debe estar entre 0 y 10');
                 error.status = 400;
                 throw error;
@@ -113,12 +100,18 @@ console.log("fEDE2")
         return rowsAffected;
     }
 
-    validarAlumnoExiste = async (id) => {
+    deleteByIdAsync = async (id) => {
+        console.log(`CalificacionesService.deleteByIdAsync(${id})`);
 
+        const rowCount = await this.CalificacionesRepository.deleteByIdAsync(id);
+
+        return rowCount;
+    }
+
+    validarAlumnoExiste = async (id) => {
         const alumno = await this.AlumnosService.getByIdAsync(id);
 
         if (alumno == null) {
-
             const error = new Error(`El alumno con id ${id} no existe`);
             error.status = 404;
             throw error;
@@ -126,11 +119,9 @@ console.log("fEDE2")
     }
 
     validarMateriaExiste = async (id) => {
-
         const materia = await this.MateriasService.getByIdAsync(id);
 
         if (materia == null) {
-
             const error = new Error(`La materia con id ${id} no existe`);
             error.status = 404;
             throw error;

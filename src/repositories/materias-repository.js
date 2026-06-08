@@ -7,47 +7,56 @@ export default class MateriasRepository {
     }
 
     getAllAsync = async () => {
-        console.log(`MateriasRepository-new.getAllAsync()`);
-            const sql = `SELECT * FROM materias`;
-            return await this.db.queryAll(sql);
-        }
+        const sql = `SELECT * FROM materias`;
+        return await this.db.queryAll(sql);
+    }
 
-        getByIdAsync = async (id) => {
-            console.log(`MateriasRepository-new.getByIdAsync(${id})`);
-            const sql = `SELECT * FROM materias WHERE id=$1`;
-            return await this.db.queryOne(sql, [id]);
-        }
+    getByIdAsync = async (id) => {
+        const sql = `SELECT * FROM materias WHERE id = $1`;
+        return await this.db.queryOne(sql, [id]);
+    }
 
     createAsync = async (entity) => {
-        console.log(`MateriasRepository-new.createAsync(${JSON.stringify(entity)})`);
-        const sql = ` INSERT INTO materias (nombre) VALUES $1,) RETURNING id`;
+        const sql = `
+            INSERT INTO materias (
+                nombre
+            )
+            VALUES (
+                $1
+            )
+            RETURNING id
+        `;
+
         const values = [
-            entity?.nombre
-          
+            entity?.nombre ?? ''
         ];
+
         return await this.db.queryReturnId(sql, values);
     }
 
     updateAsync = async (entity) => {
-        console.log(`MateriasRepository-new.updateAsync(${JSON.stringify(entity)})`);
-        let id = entity.id;
+        const previousEntity = await this.getByIdAsync(entity.id);
 
-        const previousEntity = await this.getByIdAsync(id);
-        if (previousEntity == null) return 0;
+        if (previousEntity == null) {
+            return 0;
+        }
 
-        const sql = `UPDATE materias SET
-                        id_alumno              = $1
-                    WHERE id = $1`;
+        const sql = `
+            UPDATE materias
+            SET nombre = $2
+            WHERE id = $1
+        `;
+
         const values = [
-            id,
-            entity?.nombre          ?? previousEntity?.nombre,
+            entity.id,
+            entity?.nombre ?? previousEntity.nombre
         ];
+
         return await this.db.queryRowCount(sql, values);
     }
 
     deleteByIdAsync = async (id) => {
-        console.log(`MateriasRepository-new.deleteByIdAsync(${id})`);
-        const sql = `DELETE FROM materias WHERE id=$1`;
+        const sql = `DELETE FROM materias WHERE id = $1`;
         return await this.db.queryRowCount(sql, [id]);
     }
 }
